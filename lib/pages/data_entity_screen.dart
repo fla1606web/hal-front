@@ -173,9 +173,9 @@ Stack body(BuildContext context) {
                                                   textStyle: GoogleFonts.getFont(
                                                         'Fredoka',
                                                         fontWeight: FontWeight.w500,
-                                                        fontSize: 13,
-                                                        color: Color(0xFF000000),
-                                                      )
+                                                        fontSize: 20,
+                                                      ),
+                                                      foregroundColor: Color(0xFF000000)
                                               ),
                                             ),
                                         ),
