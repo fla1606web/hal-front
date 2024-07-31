@@ -1,0 +1,150 @@
+name: flutter_app
+description: "A new Flutter project."
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.3.3 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  google_fonts: ^6.2.1
+  http: ^1.2.1
+  dio: ^5.4.3+1
+  shared_preferences: ^2.2.3
+  flutter_form_builder: ^9.3.0
+  form_builder_validators: ^10.0.1
+  sizer: ^2.0.15
+  pluto_grid: ^8.0.0
+  faker: ^2.0.0
+  mongo_dart: ^0.10.3  
+  sidebarx: ^0.17.1
+  flutter_svg: ^2.0.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+  flutter_svg: ^2.0.10+1
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/vectors/gallery_2_x2.svg
+    - assets/vectors/gallery_4_x2.svg
+    - assets/vectors/gallery_3_x2.svg
+    - assets/vectors/notification_3_x2.svg
+    - assets/vectors/vector_8_x2.svg
+    - assets/vectors/gallery_1_x2.svg
+    - assets/vectors/home_5_x2.svg
+    - assets/vectors/gallery_7_x2.svg
+    - assets/vectors/vector_41_x2.svg
+    - assets/vectors/gallery_9_x2.svg
+    - assets/vectors/dcube_4_x2.svg
+    - assets/vectors/element_41_x2.svg
+    - assets/vectors/vector_31_x2.svg
+    - assets/vectors/group_1114_x2.svg
+    - assets/vectors/text_3_x2.svg
+    - assets/vectors/vector_33_x2.svg
+    - assets/vectors/vector_22_x2.svg
+    - assets/vectors/vector_6_x2.svg
+    - assets/vectors/vector_52_x2.svg
+    - assets/vectors/dcube_x2.svg
+    - assets/vectors/group_1112_x2.svg
+    - assets/vectors/quote_up_square_x2.svg
+    - assets/vectors/vector_48_x2.svg
+    - assets/vectors/group_1113_x2.svg
+    - assets/vectors/calendar_1_x2.svg
+    - assets/vectors/vector_x2.svg
+    - assets/vectors/vector_58_x2.svg
+    - assets/vectors/home_x2.svg
+    - assets/vectors/vector_11_x2.svg
+    - assets/vectors/vector_37_x2.svg
+    - assets/vectors/vector_34_x2.svg
+    - assets/vectors/notification_5_x2.svg
+    - assets/vectors/vector_45_x2.svg
+    - assets/vectors/vector_16_x2.svg
+    - assets/vectors/vector_24_x2.svg
+    - assets/vectors/vector_53_x2.svg
+    - assets/vectors/element_43_x2.svg
+    - assets/vectors/group_1111_x2.svg
+    - assets/vectors/vector_42_x2.svg
+    - assets/vectors/vector_10_x2.svg
+    - assets/vectors/sms_x2.svg
+    - assets/vectors/vector_25_x2.svg
+    - assets/vectors/gallery_16_x2.svg
+    - assets/vectors/dcube_6_x2.svg
+    - assets/vectors/layer_1_x2.svg
+    - assets/vectors/gallery_13_x2.svg
+    - assets/vectors/home_3_x2.svg
+    - assets/vectors/vector_14_x2.svg
+    - assets/vectors/element_44_x2.svg
+    - assets/vectors/vector_1_x2.svg
+    - assets/vectors/notification_x2.svg
+    - assets/vectors/gallery_8_x2.svg
+    - assets/vectors/gallery_x2.svg
+    - assets/vectors/add_square_x2.svg
+    - assets/vectors/layer_2_x2.svg
+    - assets/vectors/dcube_3_x2.svg
+    - assets/vectors/setting_51_x2.svg
+    - assets/vectors/vector_13_x2.svg
+    - assets/vectors/notification_2_x2.svg
+    - assets/vectors/layer_x2.svg
+    - assets/vectors/vector_26_x2.svg
+    - assets/vectors/home_2_x2.svg
+    - assets/vectors/element_46_x2.svg
+    - assets/vectors/add_square_1_x2.svg
+    - assets/vectors/home_1_x2.svg
+    - assets/vectors/text_x2.svg
+    - assets/vectors/layer_3_x2.svg
+    - assets/vectors/vector_30_x2.svg
+    - assets/vectors/setting_5_x2.svg
+    - assets/vectors/key_square_1_x2.svg
+    - assets/vectors/vector_2_x2.svg
+    - assets/vectors/arrow_square_down_x2.svg
+    - assets/vectors/vector_15_x2.svg
+    - assets/vectors/vector_46_x2.svg
+    - assets/vectors/text_1_x2.svg
+    - assets/vectors/vector_17_x2.svg
+    - assets/vectors/arrow_square_up_x2.svg
+    - assets/vectors/arrow_square_down_1_x2.svg
+    - assets/vectors/vector_36_x2.svg
+    - assets/vectors/layer_5_x2.svg
+    - assets/vectors/vector_9_x2.svg
+    - assets/vectors/vector_18_x2.svg
+    - assets/vectors/dcube_5_x2.svg
+    - assets/vectors/menu_x2.svg
+    - assets/vectors/vector_7_x2.svg
+    - assets/vectors/vector_57_x2.svg
+    - assets/vectors/notification_1_x2.svg
+    - assets/vectors/vector_21_x2.svg
+    - assets/vectors/arrow_square_up_1_x2.svg
+    - assets/vectors/vector_32_x2.svg
+    - assets/vectors/group_111_x2.svg
+    - assets/vectors/vector_20_x2.svg
+    - assets/vectors/gallery_12_x2.svg
+    - assets/vectors/vector_43_x2.svg
+    - assets/vectors/vector_35_x2.svg
+    - assets/vectors/vector_27_x2.svg
+    - assets/vectors/attach_circle_1_x2.svg
+    - assets/vectors/close_square_x2.svg
+    - assets/vectors/element_45_x2.svg
+    - assets/vectors/gallery_10_x2.svg
+    - assets/vectors/vector_23_x2.svg
+    - assets/vectors/vector_4_x2.svg
+    - assets/vectors/gallery_17_x2.svg
+    - assets/vectors/notification_6_x2.svg
+    - assets/vectors/dcube_1_x2.svg
+    - assets/vectors/vector_40_x2.svg
+    - assets/vectors/gallery_5_x2.svg
+    - assets/vectors/vector_54_x2.svg
+    - assets/vectors/home_4_x2.svg
+    - assets/vectors/element_4_x2.svg
+    - assets/vectors/gallery_15_x2.svg
+    - assets/images/image_3.png
+    - assets/vectors/gallery_11_x2.svg
+    - assets/vectors/gallery_14_x2.svg
+    - assets/vectors/avatar.png
