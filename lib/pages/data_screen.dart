@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/resources/local_storage.dart';
@@ -18,11 +19,15 @@ class EntityFieldHelper {
   final String? name;
   final String? columnName;
   final String? type;
+  final String? idEntityRelation;
+  final List<String>? dataRelation;
  
   EntityFieldHelper({
     this.name,
     this.columnName,
     this.type,
+    this.idEntityRelation,
+    this.dataRelation
   });
 } 
 
@@ -70,7 +75,7 @@ class _DataPageState extends State<DataPage> {
     final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
     final idEntity = args["idEntity"];
     final tableName = args["tableName"];
-    
+   
     final _controller = SidebarXController(selectedIndex: 0, extended: false);
 
     return BaseContainer(
@@ -91,13 +96,23 @@ class _DataPageState extends State<DataPage> {
               } else {
                 for (var e in snapshot.data) {
                     PlutoColumnType pct = PlutoColumnType.text();
+                    PlutoColumn p;
                     if (e.type == 'Numeric') { pct = PlutoColumnType.number(); }
                     if (e.type == 'Date') { pct = PlutoColumnType.date(); }
-                    PlutoColumn p = PlutoColumn(
-                      title: e.name, 
-                      field: e.columnName,
-                      type:  pct
-                    );
+
+                    if (e.type == 'Relation') {
+                      p = PlutoColumn(
+                        title: e.name, 
+                        field: e.columnName,
+                        type:  PlutoColumnType.select(e.dataRelation)                   
+                      );                  
+                    } else {
+                      p = PlutoColumn(
+                        title: e.name, 
+                        field: e.columnName,
+                        type:  pct,
+                      );
+                    }
 
                     PlutoColumnGroup pg = PlutoColumnGroup(title: e.name, fields: ['$e.name'], expandedColumn: true);
 
@@ -118,13 +133,9 @@ class _DataPageState extends State<DataPage> {
                         stateManager.setShowColumnFilter(true);
                       },
                       onRowChecked: (event){ print(event);},
-                      onRowDoubleTap: (event) {
-                        print('doble clic');
-                      },
                       onChanged: (PlutoGridOnChangedEvent event) {
                         print(event);
                       },
-                      onSelected: (event){ print(event);},
                       configuration: const PlutoGridConfiguration(),
                       createHeader: (stateManager) => _Header(stateManager: stateManager, collectionName: tableName),
                     ),
@@ -136,6 +147,7 @@ class _DataPageState extends State<DataPage> {
     );
   }
   
+
   Future<List<EntityFieldHelper>> getEntityFields(String idEntity, String collectionName) async {
 
       final url = Uri.parse('http://localhost:8000/entityField/entity/${idEntity}');
@@ -164,7 +176,9 @@ class _DataPageState extends State<DataPage> {
                 EntityFieldHelper entityFieldHelper = EntityFieldHelper(
                     name: singleEntity["name"],
                     columnName: singleEntity["field_name"],
-                    type: singleEntity["id_entity_field_type"]
+                    type: singleEntity["id_entity_field_type"],
+                    idEntityRelation: singleEntity["id_entity_relation"],
+                    dataRelation: await getEntityFieldsRelation(singleEntity["id_entity_relation"], singleEntity['entity_relation_field_name'])
                 );
                 entityFieldsHelper.add(entityFieldHelper);
               }
@@ -193,7 +207,19 @@ class _DataPageState extends State<DataPage> {
                         for (var singleField in responseField[0]) {
                           var nameField = singleField["field_name"].toString();
                           try {
-                            rowDataHelper += '"' + nameField + '":"'+ singleData[nameField] + '",';
+                            if (singleField['id_entity_relation'].trim() != "") {
+                                String idRegisterEntityRelation = singleData[nameField];
+                                EntityFieldHelper objetoEncontrado = entityFieldsHelper.firstWhere((entry) => entry.columnName == nameField);                                
+                                if (objetoEncontrado.dataRelation!.length > 0) {
+                                  int indice = objetoEncontrado.dataRelation!.indexWhere((element) => element.contains(idRegisterEntityRelation));
+                                  String dataRegisterEntityRelation = objetoEncontrado.dataRelation![indice];
+                                  rowDataHelper += '"' + nameField + '":"'+ dataRegisterEntityRelation + '",';                                  
+                                } else {
+                                  rowDataHelper += '"' + nameField + '":"",';  
+                                }
+                            } else {
+                                rowDataHelper += '"' + nameField + '":"'+ singleData[nameField] + '",';
+                            }
                           } catch (e) {
                             rowDataHelper += '"' + nameField + '":"",';
                           }
@@ -218,6 +244,94 @@ class _DataPageState extends State<DataPage> {
       
       return entityFieldsHelper;
   }
+
+  Future<List<String>> getEntityFieldsRelation(String idEntityRelation, String fieldNameEntityRelation) async {
+
+    List<String> dataEntityRelation = [];
+
+    if (idEntityRelation != "") {
+      // Obtener el nombre de la entidad a partir de su id
+      String nameEntityRelation = await getNameEntityRelation(idEntityRelation);
+
+      // obtener los datos de la entidad para luego armar la lista desplegable
+      dataEntityRelation = await getDataEntityRelation(nameEntityRelation, fieldNameEntityRelation);
+    }
+
+    return dataEntityRelation;
+  }
+
+  Future<String> getNameEntityRelation(String idEntityRelation) async {
+
+      final url = Uri.parse('http://localhost:8000/entity/${idEntityRelation}');
+      String token = LocalStorage.getUserData("token");
+      try {          
+        final response = await http.get(url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          }
+        );
+    
+        if (response.statusCode == 200) {
+          var responseBody = json.decode(response.body);
+          if (responseBody['code'] == 200) {
+              var responseData = responseBody['data'];
+              var singleEntity = responseData[0];
+              var nameEntityRelation = singleEntity['table_name'];
+
+              return nameEntityRelation;
+          }
+          log('Login response: ${responseBody['message']}');
+        } else {
+          log('Login response: ${response.statusCode}');
+        }
+
+      } catch (e) {
+        log('Exception: $e');
+      }
+      
+      return "";
+  }
+
+ Future<List<String>> getDataEntityRelation(String nameEntityRelation, String fieldNameEntityRelation) async {
+
+      List<String> data = [];
+      String idAccount = LocalStorage.getUserData("id_account");
+      String token = LocalStorage.getUserData("token");
+      final url = Uri.parse('http://localhost:8000/data/${idAccount}/${nameEntityRelation}');
+      try {          
+        final response = await http.get(url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          }
+        );
+    
+        if (response.statusCode == 200) {
+                  var responseBody = json.decode(response.body);
+                  if (responseBody['code'] == 200) {
+                      var responseData = responseBody['data'];  
+                      for (var singleData in responseData) {
+                        String rowDataHelper = "";
+
+                        var singleIdData = singleData['_id'].toString();
+                        rowDataHelper = singleData[fieldNameEntityRelation].toString().trim();
+                        rowDataHelper = rowDataHelper.padRight(100 - rowDataHelper.length);
+                        rowDataHelper += 'idRegisterEntityRelation:' +  singleIdData.substring(7, singleIdData.length - 1); 
+
+                        data.add(rowDataHelper);
+                      }
+                      return data;
+                    }
+        }
+      } catch (e) {
+        log('Exception: $e');
+      }
+      
+      return data;
+  }  
 
 }
 
@@ -295,13 +409,19 @@ class _HeaderState extends State<_Header> {
     widget.stateManager.setShowLoading(true);
     String idData = "";
     String rowHelper = "";
+    int exitsIdRegisterEntityRelation = 0;
 
     Future.delayed(const Duration(milliseconds: 500), () {
       for (var row in widget.stateManager.refRows) {
         rowHelper = "";
         row.cells.forEach((k,v) {
             if (k.toString()!='id') {
-              rowHelper += '"' + k.toString() + '":"' + v.value.toString() + '",';
+              exitsIdRegisterEntityRelation = v.value.toString().indexOf('idRegisterEntityRelation');
+              if (exitsIdRegisterEntityRelation > 0) {
+                rowHelper += '"' + k.toString() + '":"' + v.value.toString().substring(exitsIdRegisterEntityRelation + 25) + '",';
+              } else {
+                rowHelper += '"' + k.toString() + '":"' + v.value.toString() + '",';
+              }
             } else {
               idData = v.value.toString();
             }

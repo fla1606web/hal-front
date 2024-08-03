@@ -23,6 +23,7 @@ dependencies:
   mongo_dart: ^0.10.3  
   sidebarx: ^0.17.1
   flutter_svg: ^2.0.5
+  dropdown_search: ^5.0.6
 
 dev_dependencies:
   flutter_test:
