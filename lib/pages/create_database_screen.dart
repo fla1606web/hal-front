@@ -1,3 +1,4 @@
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_app/routes.dart';
 import 'package:flutter_app/values/app_routes.dart';
@@ -52,6 +53,9 @@ class _DatabaseCreatorPageState extends State<DatabaseCreatorPage> {
   List<Map<String, dynamic>> _fields = [];
   List<Entity> entities = [];
   List<String> entitiesMat = [];
+  List<String> fieldsEntity = []; 
+  List<String> listDefault = []; 
+    
   bool visibleRelation = false;
 
   void _addField() {
@@ -66,8 +70,12 @@ class _DatabaseCreatorPageState extends State<DatabaseCreatorPage> {
         'maxChars': 99,
         'specialChars': false,
         'relationActive': false,
+        'relationFieldNameActive': false,
         'idEntityRelation': '',
-        'nameEntityRelation': entitiesMat[0]
+        'nameEntityRelation': entitiesMat[0],
+        'fieldNameEntityRelation': fieldsEntity[0],
+        'fieldsEntityRelation': ['Seleccione un elemento'],
+        'controller': TextEditingController()
       });
     });
   }
@@ -123,10 +131,14 @@ class _DatabaseCreatorPageState extends State<DatabaseCreatorPage> {
                 labelStyle: GoogleFonts.getFont('Fredoka'),
                 border: OutlineInputBorder(),
               ),
+              controller: field['controller'],
               onChanged: (value) {
                 setState(() {
                   field['name'] = value;
                 });
+              },
+              onTapOutside: (event) {
+                  field['controller'].text = field['name'];
               },
             ),
             SizedBox(height: 10),
@@ -177,10 +189,17 @@ class _DatabaseCreatorPageState extends State<DatabaseCreatorPage> {
               }).toList(),
               onChanged: (String? newValue) {
                 int selectedIndex = entitiesMat.indexWhere((option) => option == newValue);
-                print(selectedIndex);
-                setState(() {
-                  field['nameEntityRelation'] = newValue!;
-                  field['idEntityRelation'] = entities[selectedIndex].id;
+                var result = loadFieldsEntity(entities[selectedIndex].id.toString());
+                result.then((value) => {
+                  if (value == true) {
+                    setState(() {
+                      field['relationFieldNameActive'] = true;
+                      field['nameEntityRelation'] = newValue!;
+                      field['idEntityRelation'] = entities[selectedIndex].id;
+                      field['fieldsEntityRelation'].clear();
+                      field['fieldsEntityRelation'].addAll(fieldsEntity);
+                    })
+                  }
                 });
               },
               decoration: InputDecoration(
@@ -189,6 +208,28 @@ class _DatabaseCreatorPageState extends State<DatabaseCreatorPage> {
                 border: OutlineInputBorder(),
               ),
             )       
+            ),
+            Visibility(
+              visible: field['relationFieldNameActive'],
+              child: SizedBox(height: 10)
+            ),
+            Visibility(
+              visible: field['relationFieldNameActive'],
+              child: DropdownSearch<String>(
+              items: field['fieldsEntityRelation'],
+              onChanged: (value) {
+                setState(() {
+                  field['fieldNameEntityRelation'] = value;  
+                });                
+              },
+              dropdownDecoratorProps: DropDownDecoratorProps(
+                dropdownSearchDecoration: InputDecoration(
+                    labelText: 'Seleccion campo a mostrar',
+                    labelStyle: GoogleFonts.getFont('Fredoka'),
+                    border: OutlineInputBorder(),
+                ),
+              )              
+            ),    
             ),
             if (field['type'] == 'Fecha')
               ListTile(
@@ -702,6 +743,8 @@ class _DatabaseCreatorPageState extends State<DatabaseCreatorPage> {
   Future<void> loadEntities() async {
 
     if (entities.isEmpty) {
+      fieldsEntity.add('Seleccione un campo');
+      listDefault.add('Seleccione un elemento');
       String idAccount = LocalStorage.getUserData("id_account");
       final url = Uri.parse('http://localhost:8000/entity/account/${idAccount}');
       String token = LocalStorage.getUserData("token");
@@ -738,6 +781,44 @@ class _DatabaseCreatorPageState extends State<DatabaseCreatorPage> {
         print('Exception: $e');
       }
     }
+  }
+
+  Future<bool> loadFieldsEntity(String idEntity) async {
+
+      fieldsEntity.clear();
+      fieldsEntity.add('Seleccione un campo');
+      final url = Uri.parse('http://localhost:8000/entityField/entity/${idEntity}');
+      String token = LocalStorage.getUserData("token");
+      try {          
+        final response = await http.get(url,
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $token',
+          }
+        );
+        
+        if (response.statusCode == 200) {
+          var responseBody = json.decode(response.body);
+          if (responseBody['code'] == 200) {
+              var responseField = responseBody['data'];
+              String rowFieldEntity = "";
+              for (var singleEntity in responseField[0]) {
+                rowFieldEntity = singleEntity["field_name"];
+
+                fieldsEntity.add(rowFieldEntity);
+              }
+              return true;
+          }
+          print('Login response: ${responseBody['message']}');
+        } else {
+          print('Login response: ${response.statusCode}');
+        }
+      } catch (e) {
+        print('Exception: $e');
+      }
+      
+      return false;
   }
 
   Future<bool> saveDatabase() async {
@@ -783,8 +864,11 @@ class _DatabaseCreatorPageState extends State<DatabaseCreatorPage> {
     return false;
   } 
   
+  
   void saveFields(idEntity) {
     String type = "";
+    String idEntityRelation = "";
+    String fieldNameEntityRelation = "";
     for (var field in _fields) {
       switch(field['type']) {
         case "Texto": type = "Alphanumeric";
@@ -792,11 +876,17 @@ class _DatabaseCreatorPageState extends State<DatabaseCreatorPage> {
         case "Fecha": type = "Date";        
         case "Relacion": type = "Relation";
       }
-      saveField(idEntity, field['name'], type, field['idEntityRelation']);
+      idEntityRelation = "";
+      fieldNameEntityRelation = "";
+      if (type == "Relation") {
+        idEntityRelation = field['idEntityRelation'];
+        fieldNameEntityRelation = field['fieldNameEntityRelation'];
+      }
+      saveField(idEntity, field['name'], type, idEntityRelation, fieldNameEntityRelation);
     }
   }
 
-  Future<bool> saveField(idEntity, name, type, idEntityRelation) async {
+  Future<bool> saveField(idEntity, name, type, idEntityRelation, fieldNameEntityRelation) async {
     final url = Uri.parse("http://localhost:8000/entityField/");
 
     Map<String, dynamic> _body = { 
@@ -805,6 +895,7 @@ class _DatabaseCreatorPageState extends State<DatabaseCreatorPage> {
           'field_name': name,
           'id_entity_field_type': type,
           'id_entity_relation': idEntityRelation,
+          'entity_relation_field_name': fieldNameEntityRelation,
           'required': 'true',
           'order': '0',
           'minimun': '0',
