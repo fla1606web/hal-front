@@ -8,12 +8,11 @@ import 'package:flutter_app/values/app_routes.dart';
 import 'package:sidebarx/sidebarx.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import '../components/button_left_bar.dart';
 import '../routes.dart';
 import '../values/app_theme.dart';
 import 'package:http/http.dart' as http;
 import 'package:pluto_grid/pluto_grid.dart';
-
 
 class BaseContainer extends StatelessWidget {
   final String title;
@@ -49,24 +48,23 @@ class BaseContainer extends StatelessWidget {
         ),
       ),
       onGenerateRoute: Routes.generateRoute,
-      home: Builder(
-        builder: (context) {
-          final isSmallScreen = MediaQuery.of(context).size.width < 600;
-          return Scaffold(
+      home: Builder(builder: (context) {
+        final isSmallScreen = MediaQuery.of(context).size.width < 600;
+        return Scaffold(
             appBar: isSmallScreen
-            ? AppBar(
-                backgroundColor: AppTheme.canvasColor,
-                title: Text(title),
-                leading: IconButton(
-                  onPressed: () {
-                    // if (!Platform.isAndroid && !Platform.isIOS) {
-                    //   _controller.setExtended(true);
-                    // }
-                  },
-                  icon: const Icon(Icons.menu),
-                ),
-              )
-            : null,
+                ? AppBar(
+                    backgroundColor: AppTheme.canvasColor,
+                    title: Text(title),
+                    leading: IconButton(
+                      onPressed: () {
+                        // if (!Platform.isAndroid && !Platform.isIOS) {
+                        //   _controller.setExtended(true);
+                        // }
+                      },
+                      icon: const Icon(Icons.menu),
+                    ),
+                  )
+                : null,
             body: Container(
               child: Stack(
                 children: [
@@ -83,95 +81,29 @@ class BaseContainer extends StatelessWidget {
                       ),
                       child: Container(
                         padding: EdgeInsets.fromLTRB(0, 50, 10, 0),
-                        child: Column(
+                        child: const Column(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
-                              margin: EdgeInsets.fromLTRB(2, 0, 0, 80),
-                              width: 45,
-                              height: 45,
-                              child: IconButton(
-                                iconSize: 72,
-                                icon: SvgPicture.asset(
-                                        'assets/vectors/home_5_x2.svg',
-                                      ),
-                                onPressed: () => (Navigator.pushNamed(context, AppRoutes.index)),
-                              ),
+                            ButtonLeftBar(
+                              image: 'assets/vectors/home_5_x2.svg',
+                              url: AppRoutes.index,
                             ),
-                            Container(
-                              margin: EdgeInsets.fromLTRB(3, 0, 2, 0),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  color: Color(0xFFE4DEDE),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Container(
-                                  width: 45,
-                                  height: 45,
-                                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                  child: Container(
-                                    width: 24,
-                                    height: 24,
-                                    child: Container(
-                                      width: 24,
-                                      height: 24,
-                                      child: SvgPicture.asset(
-                                        'assets/vectors/element_41_x2.svg',
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.fromLTRB(2, 0, 0, 0),
-                              width: 24,
-                              height: 24,
-                              child: Container(
-                                width: 21.5,
-                                height: 21.5,
-                                child: SvgPicture.asset(
-                                  'assets/vectors/vector_8_x2.svg',
-                                ),
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.fromLTRB(2, 0, 0, 80),
-                              width: 24,
-                              height: 24,
-                              child: Container(
-                                width: 24,
-                                height: 24,
-                                child: SvgPicture.asset(
-                                  'assets/vectors/dcube_4_x2.svg',
-                                ),
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              width: 24,
-                              height: 24,
-                              child: Container(
-                                width: 20.9,
-                                height: 21.5,
-                                child: SvgPicture.asset(
-                                  'assets/vectors/vector_41_x2.svg',
-                                ),
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
-                              width: 24,
-                              height: 24,
-                              child: Container(
-                                width: 24,
-                                height: 24,
-                                child: SvgPicture.asset(
-                                  'assets/vectors/notification_3_x2.svg',
-                                ),
-                              ),
-                            ),
+                            ButtonLeftBar(
+                                image: 'assets/vectors/element_41_x2.svg',
+                                url: AppRoutes.index),
+                            ButtonLeftBar(
+                                image: 'assets/vectors/vector_8_x2.svg',
+                                url: AppRoutes.index),
+                            ButtonLeftBar(
+                                image: 'assets/vectors/dcube_4_x2.svg',
+                                url: AppRoutes.index),
+                            ButtonLeftBar(
+                                image: 'assets/vectors/vector_41_x2.svg',
+                                url: AppRoutes.index),
+                            ButtonLeftBar(
+                                image: 'assets/vectors/notification_3_x2.svg',
+                                url: AppRoutes.index)
                           ],
                         ),
                       ),
@@ -184,8 +116,7 @@ class BaseContainer extends StatelessWidget {
                       Container(
                         width: screenWidth,
                         decoration: const BoxDecoration(
-                          color: Color.fromARGB(255, 86, 133, 156)
-                        ),
+                            color: Color.fromARGB(255, 86, 133, 156)),
                         child: Container(
                           child: Container(
                             padding: EdgeInsets.fromLTRB(26, 10, 30, 10),
@@ -235,14 +166,11 @@ class BaseContainer extends StatelessWidget {
                       ),
                     ],
                   ),
-                  Container(
-                    child: child
-                  ),
+                  Container(child: child),
                 ],
               ),
-            )
-          );
-        }),
-      );
+            ));
+      }),
+    );
   }
 }

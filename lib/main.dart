@@ -22,7 +22,6 @@ void main() async {
   runApp(const MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -31,23 +30,24 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter App',
       //onGenerateRoute: Routes.generateRoute,
-     routes: {
+      routes: {
         '/login': (context) => LoginPage(),
         '/register': (context) => MacBookPro9(),
         '/index': (context) => const IndexPage(),
         '/entity': (context) => DataEntityPage(),
         '/createDatabase': (context) => CreateDatabasePage(),
         '/data': (context) => DataPage(),
-      },      
+      },
       home: Scaffold(
         //body: MacBookPro1(),
         //body: MacBookPro2(),
         //body: MacBookPro3(),
         //body: MacBookPro5(),
         //body: MacBookPro6(),
+        body: IndexPage(),
         //body: MacBookPro7(),
         //body: MacBookPro8(),
-        body: LoginPage(),
+        //body: LoginPage(),
       ),
     );
   }

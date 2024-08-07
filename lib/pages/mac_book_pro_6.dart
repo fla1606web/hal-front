@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
+import 'package:flutter_app/values/app_routes.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../components/card_hal.dart';
 
 class MacBookPro6 extends StatefulWidget {
   @override
@@ -235,69 +238,11 @@ class _MacBookPro6State extends State<MacBookPro6> {
                       mainAxisSpacing: 15,
                       childAspectRatio: 2.9 / 0.8),
                   itemBuilder: (context, i) {
-                    return Container(
-                      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Color(0xFF000000)),
-                        borderRadius: BorderRadius.circular(10),
-                        color: Color.fromARGB(255, 255, 255, 255),
-                      ),
-                      child: Container(
-                        child: Container(
-                          padding: EdgeInsets.fromLTRB(10, 15, 0, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                child: Opacity(
-                                  opacity: 0.3,
-                                  child: Container(
-                                    width: screenWidth < 400 ? 35 : 50,
-                                    height: screenWidth < 400 ? 35 : 50,
-                                    child: SvgPicture.asset(
-                                      'assets/vectors/gallery_1_x2.svg',
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Column(
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(15, 2, 0, 4),
-                                    child: RichText(
-                                      text: TextSpan(
-                                        text: 'Crear una aplicación',
-                                        style: GoogleFonts.getFont(
-                                          'Fredoka',
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: screenWidth < 600 ? 13 : 18,
-                                          color: Color(0xFF000000),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Container(
-                                    margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                    child: RichText(
-                                      text: TextSpan(
-                                        text: "Lorem Ipsum",
-                                        style: GoogleFonts.getFont(
-                                          'Fredoka',
-                                          fontWeight: FontWeight.w400,
-                                          fontSize: screenWidth < 600 ? 11 : 15,
-                                          color: Color(0xFF000000),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                    return CardHal(
+                      screenWidth: screenWidth,
+                      name: "Crear App",
+                      subtitle: "Creando App",
+                      url: AppRoutes.createDatabase,
                     );
                   }),
             ),
