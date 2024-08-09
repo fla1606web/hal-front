@@ -12,11 +12,11 @@ class ButtonLeftBar extends StatefulWidget {
 class _ButtonLeftBarState extends State<ButtonLeftBar> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 45,
-      height: 45,
+    return SizedBox(
+      width: 43,
+      height: 43,
       child: IconButton(
-        iconSize: 72,
+        iconSize: 70,
         icon: SvgPicture.asset(
           widget.image,
         ),

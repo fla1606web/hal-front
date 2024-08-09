@@ -44,10 +44,10 @@ class MyApp extends StatelessWidget {
         //body: MacBookPro3(),
         //body: MacBookPro5(),
         //body: MacBookPro6(),
-        body: IndexPage(),
+        //body: IndexPage(),
         //body: MacBookPro7(),
         //body: MacBookPro8(),
-        //body: LoginPage(),
+        body: LoginPage(),
       ),
     );
   }

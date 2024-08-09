@@ -33,7 +33,7 @@ class Routes {
 
     switch (settings.name) {
       case AppRoutes.login:
-        return getRoute(widget: LoginPage());
+        return getRoute(widget: const LoginPage());
 
       case AppRoutes.register:
         return getRoute(widget: const MacBookPro9());

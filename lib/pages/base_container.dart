@@ -77,12 +77,12 @@ class BaseContainer extends StatelessWidget {
                       height: screenHeigth,
                       decoration: BoxDecoration(
                         border: Border.all(color: Color(0xFFB0A9A9)),
-                        color: Color.fromARGB(255, 222, 219, 219),
+                        color: Color.fromARGB(71, 222, 219, 219),
                       ),
                       child: Container(
-                        padding: EdgeInsets.fromLTRB(0, 50, 10, 0),
+                        padding: EdgeInsets.fromLTRB(0, 10, 10, 0),
                         child: const Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             ButtonLeftBar(
@@ -115,8 +115,7 @@ class BaseContainer extends StatelessWidget {
                     children: [
                       Container(
                         width: screenWidth,
-                        decoration: const BoxDecoration(
-                            color: Color.fromARGB(255, 86, 133, 156)),
+                        decoration: const BoxDecoration(color: Colors.white),
                         child: Container(
                           child: Container(
                             padding: EdgeInsets.fromLTRB(26, 10, 30, 10),
